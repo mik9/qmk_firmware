@@ -132,7 +132,12 @@ struct single_rgb_config layer1[] = { {63, {255, 0, 0} } };
 struct single_rgb_config layer2[] = { {5, {255, 0, 0} } };
 struct single_rgb_config layer3[] = { {29, {255, 0, 0} } };
 struct single_rgb_config layer4[] = { {43, {255, 0, 0} } };
-struct single_rgb_config layer5[] = { {57, {0, 255, 0} }, {6, {0, 255, 0} }, {7, {0, 0, 255} }, {60, {0, 255, 0} }, {9, {255, 0, 0}}, {1, {0, 0, 255}}, {12, {0, 0, 255}} };
+struct single_rgb_config layer5[] = {
+    {57, {0, 255, 0} }, {6, {0, 255, 0} }, {7, {0, 0, 255} },
+    {60, {0, 255, 0} }, {9, {255, 0, 0} }, {1, {0, 0, 255} },
+    {12, {0, 0, 255}}, {48, {255, 0, 0}}, {34, {255, 0, 0}},
+    {51, {255, 0, 0}}, {25, {255, 0, 0}}
+};
 
 // struct single_rgb_config **my_config = NULL;
 
@@ -157,6 +162,7 @@ void rgb_matrix_render_user() {
     //     }
     // }
 
+    bool otherLayerApplied = false;
     if (layer_state_is(0)) {
         apply_layer(layer0, 0);
     }
@@ -164,16 +170,26 @@ void rgb_matrix_render_user() {
         apply_layer(layer1, 1);
     }
     if (layer_state_is(2)) {
+        otherLayerApplied = true;
         apply_layer(layer2, 1);
     }
     if (layer_state_is(3)) {
+        otherLayerApplied = true;
         apply_layer(layer3, 1);
     }
     if (layer_state_is(4)) {
+        otherLayerApplied = true;
         apply_layer(layer4, 1);
     }
     if (layer_state_is(5)) {
-        apply_layer(layer5, 7);
+        otherLayerApplied = true;
+        apply_layer(layer5, 11);
+    }
+
+    if (otherLayerApplied) {
+        rgb_matrix_dim_temporary();
+    } else {
+        rgb_matrix_reset_dim();
     }
 }
 #endif

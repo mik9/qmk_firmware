@@ -13,6 +13,10 @@ enum custom_keycodes {
 	MIK_BUILD,
 	MIK_SI, // select in
 	MIK_FS, // file structure
+	MIK_EV, // extract variable
+	MIK_EF, // extract field
+    MIK_EM, // extract method
+    MIK_EP, // extract parameter
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -48,9 +52,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 		    KC_TRNS,       KC_TRNS,  KC_TRNS,                  KC_TRNS,                   KC_TRNS,          KC_TRNS,  KC_TRNS,          KC_TRNS,  KC_TRNS),
 		[_LAYER5] = LAYOUT_65_ansi_blocker(
 			KC_TRNS,       MIK_SI,   KC_TRNS, KC_TRNS,KC_TRNS, KC_TRNS, MIK_RENAME, MIK_FIND, KC_TRNS, MIK_BUILD, KC_TRNS,  KC_TRNS, MIK_FS,  KC_TRNS,  KC_TRNS,
-		    KC_TRNS,       KC_TRNS,  KC_TRNS, KC_TRNS,KC_TRNS, KC_TRNS, KC_TRNS,    KC_TRNS,  KC_TRNS, KC_TRNS,   KC_TRNS,  KC_TRNS, KC_TRNS, KC_TRNS,  KC_TRNS,
-			KC_TRNS,       KC_TRNS,  KC_TRNS, KC_TRNS,KC_TRNS, KC_TRNS, KC_TRNS,    KC_TRNS,  KC_TRNS, KC_TRNS,   KC_TRNS,  KC_TRNS,          KC_TRNS,  KC_TRNS,
-		    KC_TRNS,       KC_TRNS,  KC_TRNS, KC_TRNS,KC_TRNS, KC_TRNS, KC_TRNS,    KC_TRNS,  KC_TRNS, KC_TRNS,   KC_TRNS,  KC_TRNS,          KC_TRNS,  TG(5),
+		    KC_TRNS,       KC_TRNS,  KC_TRNS, KC_TRNS,KC_TRNS, KC_TRNS, KC_TRNS,    KC_TRNS,  KC_TRNS, KC_TRNS,   MIK_EP,   KC_TRNS, KC_TRNS, KC_TRNS,  KC_TRNS,
+			KC_TRNS,       KC_TRNS,  KC_TRNS, KC_TRNS,MIK_EF,  KC_TRNS, KC_TRNS,    KC_TRNS,  KC_TRNS, KC_TRNS,   KC_TRNS,  KC_TRNS,          KC_TRNS,  KC_TRNS,
+		    KC_TRNS,       KC_TRNS,  KC_TRNS, KC_TRNS,MIK_EV,  KC_TRNS, KC_TRNS,    MIK_EM,   KC_TRNS, KC_TRNS,   KC_TRNS,  KC_TRNS,          KC_TRNS,  TG(5),
 		    KC_TRNS,       KC_TRNS,  KC_TRNS,                  KC_TRNS,                   KC_TRNS,          KC_TRNS,  KC_TRNS,          KC_TRNS,  KC_TRNS),
 };
 
@@ -97,6 +101,45 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 		  register_code(KC_LGUI);
 		  tap_code(KC_F12);
 		  unregister_code(KC_LGUI);
+		  return false;
+	  }
+	case MIK_EV:
+	  if (record->event.pressed) {
+		  register_code(KC_LGUI);
+		  register_code(KC_LALT);
+		  tap_code(KC_V);
+		  unregister_code(KC_LGUI);
+		  unregister_code(KC_LALT);
+		  return false;
+	  }
+	  break;
+	case MIK_EF:
+	  if (record->event.pressed) {
+		  register_code(KC_LGUI);
+		  register_code(KC_LALT);
+		  tap_code(KC_F);
+		  unregister_code(KC_LGUI);
+		  unregister_code(KC_LALT);
+		  return false;
+	  }
+	  break;
+    case MIK_EM:
+	  if (record->event.pressed) {
+		  register_code(KC_LGUI);
+		  register_code(KC_LALT);
+		  tap_code(KC_M);
+		  unregister_code(KC_LGUI);
+		  unregister_code(KC_LALT);
+		  return false;
+	  }
+	  break;
+    case MIK_EP:
+	  if (record->event.pressed) {
+		  register_code(KC_LGUI);
+		  register_code(KC_LALT);
+		  tap_code(KC_P);
+		  unregister_code(KC_LGUI);
+		  unregister_code(KC_LALT);
 		  return false;
 	  }
 	  break;

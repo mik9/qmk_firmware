@@ -626,3 +626,23 @@ void rgb_matrix_decrease_speed(void) { rgb_matrix_decrease_speed_helper(true); }
 led_flags_t rgb_matrix_get_flags(void) { return rgb_matrix_config.flags; }
 
 void rgb_matrix_set_flags(led_flags_t flags) { rgb_matrix_config.flags = flags; }
+
+uint8_t last_val = 255;
+bool alreadyDecreased = false;
+
+void rgb_matrix_dim_temporary() {
+    if (alreadyDecreased) {
+        return;
+    }
+    last_val = rgb_matrix_config.hsv.v;
+    rgb_matrix_config.hsv.v = last_val / 3;
+    alreadyDecreased = true;
+}
+
+void rgb_matrix_reset_dim() {
+    if (!alreadyDecreased) {
+        return;
+    }
+    rgb_matrix_config.hsv.v = last_val;
+    alreadyDecreased = false;
+}
