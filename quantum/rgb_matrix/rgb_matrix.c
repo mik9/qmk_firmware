@@ -139,6 +139,10 @@ static last_hit_t last_hit_buffer;
 const uint8_t k_rgb_matrix_split[2] = RGB_MATRIX_SPLIT;
 #endif
 
+uint8_t preDimVal = RGB_MATRIX_STARTUP_VAL;
+uint8_t targetVal = RGB_MATRIX_STARTUP_VAL;
+bool dimEnabled = false;
+
 EECONFIG_DEBOUNCE_HELPER(rgb_matrix, EECONFIG_RGB_MATRIX, rgb_matrix_config);
 
 void eeconfig_update_rgb_matrix(void) { eeconfig_flush_rgb_matrix(true); }
@@ -297,6 +301,25 @@ static void rgb_task_timers(void) {
 #endif  // RGB_MATRIX_KEYREACTIVE_ENABLED
 }
 
+static void sync_brightness(void) {
+    int16_t valDiff = (int16_t) rgb_matrix_config.hsv.v - (int16_t) targetVal;
+    if (valDiff != 0) {
+        int8_t direction;
+        if (valDiff < 0) {
+            direction = 1;
+        } else {
+            direction = -1;
+        }
+
+        uint8_t c = RGB_MATRIX_VAL_PER_TICK;
+        if (abs(valDiff) < RGB_MATRIX_VAL_PER_TICK) {
+            c = abs(valDiff);
+        }
+
+        rgb_matrix_config.hsv.v = rgb_matrix_config.hsv.v + c * direction;
+    }
+}
+
 static void rgb_task_sync(void) {
     eeconfig_flush_rgb_matrix(false);
     // next task
@@ -365,6 +388,7 @@ static void rgb_task_render(uint8_t effect) {
             return;
     }
 
+    sync_brightness();
     rgb_matrix_render_user();
 
     rgb_effect_params.iter++;
@@ -569,7 +593,12 @@ void rgb_matrix_sethsv_eeprom_helper(uint16_t hue, uint8_t sat, uint8_t val, boo
     }
     rgb_matrix_config.hsv.h = hue;
     rgb_matrix_config.hsv.s = sat;
-    rgb_matrix_config.hsv.v = (val > RGB_MATRIX_MAXIMUM_BRIGHTNESS) ? RGB_MATRIX_MAXIMUM_BRIGHTNESS : val;
+    preDimVal = (val > RGB_MATRIX_MAXIMUM_BRIGHTNESS) ? RGB_MATRIX_MAXIMUM_BRIGHTNESS : val;
+    if (dimEnabled && preDimVal > RGB_MATRIX_DIM_BRIGHTNESS) {
+        targetVal = RGB_MATRIX_DIM_BRIGHTNESS;
+    } else {
+        targetVal = preDimVal;
+    }
     eeconfig_flag_rgb_matrix(write_to_eeprom);
     dprintf("rgb matrix set hsv [%s]: %u,%u,%u\n", (write_to_eeprom) ? "EEPROM" : "NOEEPROM", rgb_matrix_config.hsv.h, rgb_matrix_config.hsv.s, rgb_matrix_config.hsv.v);
 }
@@ -627,22 +656,21 @@ led_flags_t rgb_matrix_get_flags(void) { return rgb_matrix_config.flags; }
 
 void rgb_matrix_set_flags(led_flags_t flags) { rgb_matrix_config.flags = flags; }
 
-uint8_t last_val = 255;
-bool alreadyDecreased = false;
-
 void rgb_matrix_dim_temporary() {
-    if (alreadyDecreased) {
+    if (dimEnabled) {
         return;
     }
-    last_val = rgb_matrix_config.hsv.v;
-    rgb_matrix_config.hsv.v = last_val / 3;
-    alreadyDecreased = true;
+    preDimVal = targetVal;
+    if (targetVal > RGB_MATRIX_DIM_BRIGHTNESS) {
+        targetVal = RGB_MATRIX_DIM_BRIGHTNESS;
+    }
+    dimEnabled = true;
 }
 
 void rgb_matrix_reset_dim() {
-    if (!alreadyDecreased) {
+    if (!dimEnabled) {
         return;
     }
-    rgb_matrix_config.hsv.v = last_val;
-    alreadyDecreased = false;
+    targetVal = preDimVal;
+    dimEnabled = false;
 }
