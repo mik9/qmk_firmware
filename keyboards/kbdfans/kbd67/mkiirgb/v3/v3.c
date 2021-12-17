@@ -15,6 +15,7 @@
  */
 
 #include "v3.h"
+#include QMK_KEYBOARD_H
 
 #ifdef RGB_MATRIX_ENABLE
 
@@ -117,11 +118,62 @@ led_config_t g_led_config = { {
     1, 1, 1, 4, 1, 1, 1, 1, 1
 } };
 
+void apply_layer(struct single_rgb_config leds[], size_t n) {
+    // size_t n = sizeof(*leds)/sizeof(leds[0]);
 
-__attribute__ ((weak))
-void rgb_matrix_indicators_user(void) {
-    if (host_keyboard_led_state().caps_lock)     {
-        rgb_matrix_set_color(30, 0xFF, 0xFF, 0xFF);
+    for (int i = 0; i < n; i++) {
+        // GRB
+        rgb_matrix_set_color(leds[i].led_index, leds[i].color.r, leds[i].color.g, leds[i].color.b);
+    }
+}
+
+struct single_rgb_config layer0[] = { {} };
+struct single_rgb_config layer1[] = { {63, {255, 0, 0} } };
+struct single_rgb_config layer2[] = { {5, {255, 0, 0} } };
+struct single_rgb_config layer3[] = { {29, {255, 0, 0} } };
+struct single_rgb_config layer4[] = { {43, {255, 0, 0} } };
+struct single_rgb_config layer5[] = { {57, {0, 255, 0} }, {6, {0, 255, 0} }, {7, {0, 0, 255} }, {60, {0, 255, 0} }, {9, {255, 0, 0}}, {1, {0, 0, 255}}, {12, {0, 0, 255}} };
+
+// struct single_rgb_config **my_config = NULL;
+
+void rgb_matrix_render_user() {
+    // if (my_config == NULL) {
+    //     my_config = malloc(sizeof(struct single_rgb_config*) * 7);
+    //     my_config[0] = { NULL };
+    //     my_config[1] = layer1;
+    //     my_config[2] = layer2;
+    //     my_config[3] = layer3;
+    //     my_config[4] = layer4;
+    //     my_config[5] = layer5;
+    //     my_config[6] = NULL;
+    // }
+
+    // for (int i = 0;; i++) {
+    //     if (my_config[i] == NULL) {
+    //         break;
+    //     }
+    //     if (layer_state_is(i)) {
+    //         apply_layer(my_config[i]);
+    //     }
+    // }
+
+    if (layer_state_is(0)) {
+        apply_layer(layer0, 0);
+    }
+    if (layer_state_is(1)) {
+        apply_layer(layer1, 1);
+    }
+    if (layer_state_is(2)) {
+        apply_layer(layer2, 1);
+    }
+    if (layer_state_is(3)) {
+        apply_layer(layer3, 1);
+    }
+    if (layer_state_is(4)) {
+        apply_layer(layer4, 1);
+    }
+    if (layer_state_is(5)) {
+        apply_layer(layer5, 7);
     }
 }
 #endif
