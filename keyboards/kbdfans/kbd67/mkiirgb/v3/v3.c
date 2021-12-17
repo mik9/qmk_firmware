@@ -131,7 +131,7 @@ struct single_rgb_config layer0[] = { {} };
 struct single_rgb_config layer1[] = { {63, {255, 0, 0} } };
 struct single_rgb_config layer2[] = { {5, {255, 0, 0} } };
 struct single_rgb_config layer3[] = { {29, {255, 0, 0} } };
-struct single_rgb_config layer4[] = { {43, {255, 0, 0} } };
+struct single_rgb_config layer4[] = { {43, {0, 255, 0} }, {48, {0, 255, 0} } };
 struct single_rgb_config layer5[] = {
     {57, {0, 255, 0} }, {6, {0, 255, 0} }, {7, {0, 0, 255} },
     {60, {0, 255, 0} }, {9, {255, 0, 0} }, {1, {0, 0, 255} },
@@ -179,7 +179,7 @@ void rgb_matrix_render_user() {
     }
     if (layer_state_is(4)) {
         otherLayerApplied = true;
-        apply_layer(layer4, 1);
+        apply_layer(layer4, 2);
     }
     if (layer_state_is(5)) {
         otherLayerApplied = true;

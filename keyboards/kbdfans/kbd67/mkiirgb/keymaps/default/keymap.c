@@ -17,13 +17,14 @@ enum custom_keycodes {
 	MIK_EF, // extract field
     MIK_EM, // extract method
     MIK_EP, // extract parameter
+    MIK_PST, // Pase plain in Teams
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 		[_LAYER0] = LAYOUT_65_ansi_blocker( /* Base */
 			KC_GESC,       KC_1,     KC_2,     KC_3,  KC_4,  KC_5,  KC_6,    KC_7,  KC_8,    KC_9,     KC_0,     KC_MINS,  KC_EQL,  KC_BSPC,   KC_GRAVE,
 		    KC_TAB,        KC_Q,     KC_W,     KC_E,  KC_R,  KC_T,  KC_Y,    KC_U,  KC_I,    KC_O,     KC_P,     KC_LBRC,  KC_RBRC, KC_BSLASH, MO(3),
-			KC_F13,        KC_A,     KC_S,     KC_D,  KC_F,  KC_G,  KC_H,    KC_J,  KC_K,    KC_L,     KC_SCLN,  KC_QUOT,           KC_ENT,    MO(4),
+			KC_F13,        KC_A,     KC_S,     KC_D,  KC_F,  KC_G,  KC_H,    KC_J,  KC_K,    KC_L,     KC_SCLN,  KC_QUOT,           KC_ENT,    OSL(4),
 		    KC_LSFT,       KC_Z,     KC_X,     KC_C,  KC_V,  KC_B,  KC_N,    KC_M,  KC_COMM, KC_DOT,   KC_SLSH,  KC_RSFT,           KC_UP,     OSL(5),
 		    KC_LCTL,       KC_LALT,  KC_LGUI,                KC_SPC,                KC_RALT,           MO(1),    KC_LEFT,           KC_DOWN,   KC_RIGHT),
 		[_LAYER1] = LAYOUT_65_ansi_blocker(
@@ -47,8 +48,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 		[_LAYER4] = LAYOUT_65_ansi_blocker(
 			KC_TRNS,       KC_TRNS,  KC_TRNS, KC_TRNS,KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,  KC_TRNS, KC_TRNS, KC_TRNS,  KC_TRNS,
 		    KC_TRNS,       KC_TRNS,  KC_TRNS, KC_TRNS,KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,  KC_TRNS, KC_TRNS, KC_TRNS,  KC_TRNS,
-			KC_TRNS,       KC_TRNS,  KC_TRNS, KC_TRNS,KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,  KC_TRNS,          KC_TRNS,  KC_TRNS,
-		    KC_TRNS,       KC_TRNS,  KC_TRNS, KC_TRNS,KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,  KC_TRNS,          KC_TRNS,  KC_TRNS,
+			KC_TRNS,       KC_TRNS,  KC_TRNS, KC_TRNS,KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,  KC_TRNS,          KC_TRNS,  TG(4),
+		    KC_TRNS,       KC_TRNS,  KC_TRNS, KC_TRNS,MIK_PST, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,  KC_TRNS,          KC_TRNS,  KC_TRNS,
 		    KC_TRNS,       KC_TRNS,  KC_TRNS,                  KC_TRNS,                   KC_TRNS,          KC_TRNS,  KC_TRNS,          KC_TRNS,  KC_TRNS),
 		[_LAYER5] = LAYOUT_65_ansi_blocker(
 			KC_TRNS,       MIK_SI,   KC_TRNS, KC_TRNS,KC_TRNS, KC_TRNS, MIK_RENAME, MIK_FIND, KC_TRNS, MIK_BUILD, KC_TRNS,  KC_TRNS, MIK_FS,  KC_TRNS,  KC_TRNS,
@@ -123,7 +124,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 		  return false;
 	  }
 	  break;
-    case MIK_EM:
+  case MIK_EM:
 	  if (record->event.pressed) {
 		  register_code(KC_LGUI);
 		  register_code(KC_LALT);
@@ -133,7 +134,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 		  return false;
 	  }
 	  break;
-    case MIK_EP:
+  case MIK_EP:
 	  if (record->event.pressed) {
 		  register_code(KC_LGUI);
 		  register_code(KC_LALT);
@@ -143,6 +144,17 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 		  return false;
 	  }
 	  break;
+  case MIK_PST:
+    if (record->event.pressed) {
+        register_code(KC_LGUI);
+        register_code(KC_LALT);
+        register_code(KC_LSHIFT);
+        tap_code(KC_V);
+        unregister_code(KC_LGUI);
+        unregister_code(KC_LALT);
+        unregister_code(KC_LSHIFT);
+    }
+    break;
   }
   return true;
 }
