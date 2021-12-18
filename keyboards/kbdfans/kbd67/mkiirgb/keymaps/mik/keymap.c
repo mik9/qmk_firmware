@@ -73,6 +73,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         register_mods(mods);
         tap_code(KC_V);
         unregister_mods(mods);
+        return false;
     }
     break;
   case RGB_TOG:
@@ -85,8 +86,9 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             rgb_matrix_sethsv_noeeprom(rgb_matrix_get_hue(), rgb_matrix_get_sat(), last_rgb_matrix_val);
             last_rgb_matrix_val = 0;
         }
+        return false;
     }
-    return false;
+    break;
   }
   return true;
 }
