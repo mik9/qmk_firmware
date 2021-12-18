@@ -322,7 +322,6 @@ static void sync_brightness(void) {
         }
 
         rgb_matrix_config.hsv.v = rgb_matrix_config.hsv.v + c * direction;
-        eeconfig_flag_rgb_matrix(true);
     }
 }
 #endif
@@ -516,6 +515,10 @@ void rgb_matrix_init(void) {
         dprintf("rgb_matrix_init_drivers rgb_matrix_config.mode = 0. Write default values to EEPROM.\n");
         eeconfig_update_rgb_matrix_default();
     }
+#if defined(RGB_MATRIX_SMOOTH_BRIGHTESS)
+    targetVal = rgb_matrix_config.hsv.v;
+    rgb_matrix_config.hsv.v = 0;
+#endif
     eeconfig_debug_rgb_matrix();  // display current eeprom values
 }
 
@@ -600,9 +603,21 @@ void rgb_matrix_sethsv_eeprom_helper(uint16_t hue, uint8_t sat, uint8_t val, boo
     if (!rgb_matrix_config.enable) {
         return;
     }
+#if defined(RGB_MATRIX_DIM) || defined(RGB_MATRIX_SMOOTH_BRIGHTESS)
+    uint8_t prevVal = rgb_matrix_config.hsv.v;
+#endif
+
     rgb_matrix_config.hsv.h = hue;
     rgb_matrix_config.hsv.s = sat;
-    uint8_t v = (val > RGB_MATRIX_MAXIMUM_BRIGHTNESS) ? RGB_MATRIX_MAXIMUM_BRIGHTNESS : val;
+    rgb_matrix_config.hsv.v = (val > RGB_MATRIX_MAXIMUM_BRIGHTNESS) ? RGB_MATRIX_MAXIMUM_BRIGHTNESS : val;
+
+    uint8_t v = rgb_matrix_config.hsv.v;
+#if defined(RGB_MATRIX_DIM) || defined(RGB_MATRIX_SMOOTH_BRIGHTESS)
+    rgb_matrix_config.hsv.v = prevVal;
+#endif
+
+    eeconfig_flag_rgb_matrix(write_to_eeprom);
+
 #if defined(RGB_MATRIX_DIM)
     preDimVal = v;
 #endif
@@ -619,7 +634,6 @@ void rgb_matrix_sethsv_eeprom_helper(uint16_t hue, uint8_t sat, uint8_t val, boo
         rgb_matrix_config.hsv.v = v;
     }
 #endif
-    eeconfig_flag_rgb_matrix(write_to_eeprom);
     dprintf("rgb matrix set hsv [%s]: %u,%u,%u\n", (write_to_eeprom) ? "EEPROM" : "NOEEPROM", rgb_matrix_config.hsv.h, rgb_matrix_config.hsv.s, rgb_matrix_config.hsv.v);
 }
 void rgb_matrix_sethsv_noeeprom(uint16_t hue, uint8_t sat, uint8_t val) { rgb_matrix_sethsv_eeprom_helper(hue, sat, val, false); }
