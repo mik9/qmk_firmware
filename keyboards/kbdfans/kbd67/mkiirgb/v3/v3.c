@@ -15,7 +15,6 @@
  */
 
 #include "v3.h"
-#include QMK_KEYBOARD_H
 
 #ifdef RGB_MATRIX_ENABLE
 
@@ -118,54 +117,11 @@ led_config_t g_led_config = { {
     1, 1, 1, 4, 1, 1, 1, 1, 1
 } };
 
-const single_rgb_config NULL_LED = { 255 };
 
-void apply_layer(const single_rgb_config leds[]) {
-    for (uint8_t i = 0; leds[i].led_index != NULL_LED.led_index; i++) {
-        rgb_matrix_set_color(leds[i].led_index, leds[i].color.r, leds[i].color.g, leds[i].color.b);
-    }
-}
-
-const single_rgb_config layer0[] = { NULL_LED };
-const single_rgb_config layer1[] = { {63, {0, 255, 0} }, NULL_LED };
-const single_rgb_config layer2[] = { {62, {0, 255, 0} }, NULL_LED };
-const single_rgb_config layer3[] = { {29, {0, 255, 0} }, NULL_LED };
-const single_rgb_config layer4[] = { {43, {0, 255, 0} }, {48, {0, 255, 0} }, NULL_LED };
-const single_rgb_config layer5[] = {
-    {57, {0, 255, 0} }, {6, {0, 255, 0} }, {7, {0, 0, 255} },
-    {60, {0, 255, 0} }, {9, {255, 0, 0} }, {1, {0, 0, 255} },
-    {12, {0, 0, 255}}, {48, {255, 0, 0}}, {34, {255, 0, 0}},
-    {51, {255, 0, 0}}, {25, {255, 0, 0}}, {18, {0, 0, 255}},
-    NULL_LED
-};
-
-const single_rgb_config *led_layers[] = (const single_rgb_config*[]){
-    layer0,
-    layer1,
-    layer2,
-    layer3,
-    layer4,
-    layer5,
-    NULL // Null terminate the array
-};
-
-void rgb_matrix_render_user() {
-    bool otherLayerApplied = false;
-
-    for (int i = 0; led_layers[i] != NULL; i++) {
-        if (layer_state_is(i)) {
-            apply_layer(led_layers[i]);
-
-            if (i > RGB_DIM_AFTER_LAYER) {
-                otherLayerApplied = true;
-            }
-        }
-    }
-
-    if (otherLayerApplied) {
-        rgb_matrix_dim_temporary();
-    } else {
-        rgb_matrix_reset_dim();
+__attribute__ ((weak))
+void rgb_matrix_indicators_user(void) {
+    if (host_keyboard_led_state().caps_lock)     {
+        rgb_matrix_set_color(30, 0xFF, 0xFF, 0xFF);
     }
 }
 #endif
