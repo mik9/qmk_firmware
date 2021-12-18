@@ -44,7 +44,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 		    KC_TRNS,       KC_TRNS,  KC_TRNS,                  KC_TRNS,                   KC_TRNS,          KC_TRNS,  KC_TRNS,          KC_TRNS,  KC_TRNS),
 		[_LAYER5] = LAYOUT_65_ansi_blocker(
 			KC_TRNS,       LALT(KC_F1),KC_TRNS, KC_TRNS,KC_TRNS,  KC_TRNS, MIK_RENAME,LALT(KC_F7),KC_TRNS,LGUI(KC_F9),KC_TRNS,  KC_TRNS,LGUI(KC_F12),KC_TRNS,KC_TRNS,
-		    KC_TRNS,       KC_TRNS,    KC_TRNS, KC_TRNS,KC_TRNS,  KC_TRNS, KC_TRNS,   KC_TRNS,    KC_TRNS,KC_TRNS,    LAG(KC_P),KC_TRNS,KC_TRNS,     KC_TRNS,KC_TRNS,
+		    KC_TRNS,       KC_TRNS,    KC_TRNS, LSG(KC_E),KC_TRNS,  KC_TRNS, KC_TRNS,   KC_TRNS,    KC_TRNS,KC_TRNS,    LAG(KC_P),KC_TRNS,KC_TRNS,     KC_TRNS,KC_TRNS,
 			KC_TRNS,       KC_TRNS,    KC_TRNS, KC_TRNS,LAG(KC_F),KC_TRNS, KC_TRNS,   KC_TRNS,    KC_TRNS,KC_TRNS,    KC_TRNS,  KC_TRNS,             KC_TRNS,KC_TRNS,
 		    KC_TRNS,       KC_TRNS,    KC_TRNS, KC_TRNS,LAG(KC_V),KC_TRNS, KC_TRNS,   LAG(KC_M),  KC_TRNS,KC_TRNS,    KC_TRNS,  KC_TRNS,             KC_TRNS,TG(5),
 		    KC_TRNS,       KC_TRNS,    KC_TRNS,                   KC_TRNS,                        KC_TRNS,            KC_TRNS,  KC_TRNS,             KC_TRNS,KC_TRNS),
