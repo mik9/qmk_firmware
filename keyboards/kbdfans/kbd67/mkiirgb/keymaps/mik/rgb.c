@@ -52,23 +52,31 @@ const single_rgb_config *led_layers[] = (const single_rgb_config*[]){
     layer5,
     NULL // Null terminate the array
 };
-
+#ifdef RGB_MATRIX_RENDER_TURNED_OFF
 void rgb_matrix_render_user() {
+#else
+void rgb_matrix_indicators_user() {
+#endif
+#ifdef RGB_MATRIX_DIM
     bool otherLayerApplied = false;
+#endif
 
     for (int i = 0; led_layers[i] != NULL; i++) {
         if (layer_state_is(i)) {
             apply_layer(led_layers[i]);
-
+#ifdef RGB_MATRIX_DIM
             if (i > RGB_DIM_AFTER_LAYER) {
                 otherLayerApplied = true;
             }
+#endif
         }
     }
 
+#ifdef RGB_MATRIX_DIM
     if (otherLayerApplied) {
         rgb_matrix_dim_temporary();
     } else {
         rgb_matrix_reset_dim();
     }
+#endif
 }
