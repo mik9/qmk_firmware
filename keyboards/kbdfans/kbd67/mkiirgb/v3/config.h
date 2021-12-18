@@ -40,6 +40,7 @@
 /* disable these deprecated features by default */
 #define NO_ACTION_MACRO
 #define NO_ACTION_FUNCTION
+#define RGB_MATRIX_RENDER_TURNED_OFF
 #ifdef RGB_MATRIX_ENABLE
 #define RGB_DISABLE_TIMEOUT 300 * 1000 // number of ticks to wait until disabling effects
 #define RGB_DISABLE_WHEN_USB_SUSPENDED // turn off effects when suspended

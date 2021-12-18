@@ -263,9 +263,11 @@ void rgb_matrix_test(void) {
 }
 
 static bool rgb_matrix_none(effect_params_t *params) {
-    // if (!params->init) {
-    //     return false;
-    // }
+#if !defined(RGB_MATRIX_RENDER_TURNED_OFF)
+    if (!params->init) {
+        return false;
+    }
+#endif
 
     rgb_matrix_set_color_all(0, 0, 0);
     return false;
@@ -389,17 +391,18 @@ static void rgb_task_render(uint8_t effect) {
     }
 
     sync_brightness();
-    rgb_matrix_render_user();
 
     rgb_effect_params.iter++;
 
     // next task
     if (!rendering) {
         rgb_task_state = FLUSHING;
+#if !defined(RGB_MATRIX_RENDER_TURNED_OFF)
         if (!rgb_effect_params.init && effect == RGB_MATRIX_NONE) {
             // We only need to flush once if we are RGB_MATRIX_NONE
-            // rgb_task_state = SYNCING;
+            rgb_task_state = SYNCING;
         }
+#endif
     }
 }
 
@@ -440,6 +443,9 @@ void rgb_matrix_task(void) {
                 rgb_matrix_indicators();
                 rgb_matrix_indicators_advanced(&rgb_effect_params);
             }
+#if defined(RGB_MATRIX_RENDER_TURNED_OFF)
+            rgb_matrix_render_user();
+#endif
             break;
         case FLUSHING:
             rgb_task_flush(effect);
