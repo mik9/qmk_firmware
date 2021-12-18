@@ -118,72 +118,48 @@ led_config_t g_led_config = { {
     1, 1, 1, 4, 1, 1, 1, 1, 1
 } };
 
-void apply_layer(struct single_rgb_config leds[], size_t n) {
-    // size_t n = sizeof(*leds)/sizeof(leds[0]);
+const single_rgb_config NULL_LED = { 255 };
 
-    for (int i = 0; i < n; i++) {
-        // GRB
+void apply_layer(const single_rgb_config leds[]) {
+    for (uint8_t i = 0; leds[i].led_index != NULL_LED.led_index; i++) {
         rgb_matrix_set_color(leds[i].led_index, leds[i].color.r, leds[i].color.g, leds[i].color.b);
     }
 }
 
-struct single_rgb_config layer0[] = { {} };
-struct single_rgb_config layer1[] = { {63, {255, 0, 0} } };
-struct single_rgb_config layer2[] = { {5, {255, 0, 0} } };
-struct single_rgb_config layer3[] = { {29, {255, 0, 0} } };
-struct single_rgb_config layer4[] = { {43, {0, 255, 0} }, {48, {0, 255, 0} } };
-struct single_rgb_config layer5[] = {
+const single_rgb_config layer0[] = { NULL_LED };
+const single_rgb_config layer1[] = { {63, {0, 255, 0} }, NULL_LED };
+const single_rgb_config layer2[] = { {62, {0, 255, 0} }, NULL_LED };
+const single_rgb_config layer3[] = { {29, {0, 255, 0} }, NULL_LED };
+const single_rgb_config layer4[] = { {43, {0, 255, 0} }, {48, {0, 255, 0} }, NULL_LED };
+const single_rgb_config layer5[] = {
     {57, {0, 255, 0} }, {6, {0, 255, 0} }, {7, {0, 0, 255} },
     {60, {0, 255, 0} }, {9, {255, 0, 0} }, {1, {0, 0, 255} },
     {12, {0, 0, 255}}, {48, {255, 0, 0}}, {34, {255, 0, 0}},
-    {51, {255, 0, 0}}, {25, {255, 0, 0}}
+    {51, {255, 0, 0}}, {25, {255, 0, 0}},
+    NULL_LED
 };
 
-// struct single_rgb_config **my_config = NULL;
+const single_rgb_config *led_layers[] = (const single_rgb_config*[]){
+    layer0,
+    layer1,
+    layer2,
+    layer3,
+    layer4,
+    layer5,
+    NULL // Null terminate the array
+};
 
 void rgb_matrix_render_user() {
-    // if (my_config == NULL) {
-    //     my_config = malloc(sizeof(struct single_rgb_config*) * 7);
-    //     my_config[0] = { NULL };
-    //     my_config[1] = layer1;
-    //     my_config[2] = layer2;
-    //     my_config[3] = layer3;
-    //     my_config[4] = layer4;
-    //     my_config[5] = layer5;
-    //     my_config[6] = NULL;
-    // }
-
-    // for (int i = 0;; i++) {
-    //     if (my_config[i] == NULL) {
-    //         break;
-    //     }
-    //     if (layer_state_is(i)) {
-    //         apply_layer(my_config[i]);
-    //     }
-    // }
-
     bool otherLayerApplied = false;
-    if (layer_state_is(0)) {
-        apply_layer(layer0, 0);
-    }
-    if (layer_state_is(1)) {
-        apply_layer(layer1, 1);
-    }
-    if (layer_state_is(2)) {
-        otherLayerApplied = true;
-        apply_layer(layer2, 1);
-    }
-    if (layer_state_is(3)) {
-        otherLayerApplied = true;
-        apply_layer(layer3, 1);
-    }
-    if (layer_state_is(4)) {
-        otherLayerApplied = true;
-        apply_layer(layer4, 2);
-    }
-    if (layer_state_is(5)) {
-        otherLayerApplied = true;
-        apply_layer(layer5, 11);
+
+    for (int i = 0; led_layers[i] != NULL; i++) {
+        if (layer_state_is(i)) {
+            apply_layer(led_layers[i]);
+
+            if (i > RGB_DIM_AFTER_LAYER) {
+                otherLayerApplied = true;
+            }
+        }
     }
 
     if (otherLayerApplied) {

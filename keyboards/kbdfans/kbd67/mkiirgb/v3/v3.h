@@ -13,7 +13,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
- 
+
 #pragma once
 #define XXX KC_NO
 #include "quantum.h"
@@ -31,13 +31,9 @@
     { K40, K41, K42, XXX, XXX, K45, XXX, XXX, K48, XXX, K4A, K4B, XXX, K4D, K4E }  \
 }
 
-struct single_rgb_config {
-    int led_index;
+#define RGB_DIM_AFTER_LAYER 1
+
+typedef struct {
+    uint8_t led_index;
     RGB color;
-};
-
-struct layer_rgb_config {
-    struct single_rgb_config *leds;
-};
-
-void apply_layer(struct single_rgb_config leds[], size_t n);
+} single_rgb_config;
