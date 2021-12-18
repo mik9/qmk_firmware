@@ -52,11 +52,7 @@ const single_rgb_config *led_layers[] = (const single_rgb_config*[]){
     layer5,
     NULL // Null terminate the array
 };
-#ifdef RGB_MATRIX_RENDER_TURNED_OFF
-void rgb_matrix_render_user() {
-#else
 void rgb_matrix_indicators_user() {
-#endif
 #ifdef RGB_MATRIX_DIM
     bool otherLayerApplied = false;
 #endif
