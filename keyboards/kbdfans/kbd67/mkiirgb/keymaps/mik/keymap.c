@@ -50,7 +50,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 		    KC_TRNS,       KC_TRNS,    KC_TRNS,                   KC_TRNS,                        KC_TRNS,            KC_TRNS,  KC_TRNS,             KC_TRNS,KC_TRNS),
 };
 
-uint8_t last_rgb_matrix_mode;
 uint8_t last_rgb_matrix_val;
 
 // could be done with Key Ovverids but saves 5% of space.
@@ -79,13 +78,10 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   case RGB_TOG:
     if (record->event.pressed) {
         if (last_rgb_matrix_val == 0) {
-            last_rgb_matrix_mode = rgb_matrix_get_mode();
             last_rgb_matrix_val = rgb_matrix_get_val();
 
-            rgb_matrix_mode_noeeprom(RGB_MATRIX_SOLID_COLOR);
             rgb_matrix_sethsv_noeeprom(rgb_matrix_get_hue(), rgb_matrix_get_sat(), 0);
         } else {
-            rgb_matrix_mode_noeeprom(last_rgb_matrix_mode);
             rgb_matrix_sethsv_noeeprom(rgb_matrix_get_hue(), rgb_matrix_get_sat(), last_rgb_matrix_val);
             last_rgb_matrix_val = 0;
         }

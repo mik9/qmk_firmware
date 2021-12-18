@@ -435,6 +435,9 @@ void rgb_matrix_task(void) {
                              false;
 
     uint8_t effect = suspend_backlight || !rgb_matrix_config.enable ? 0 : rgb_matrix_config.mode;
+    if (rgb_matrix_config.enable && rgb_matrix_config.hsv.v == 0) {
+        effect = RGB_MATRIX_SOLID_COLOR;
+    }
 
     switch (rgb_task_state) {
         case STARTING:
