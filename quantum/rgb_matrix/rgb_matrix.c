@@ -342,6 +342,10 @@ static void rgb_task_start(void) {
     g_last_hit_tracker = last_hit_buffer;
 #endif  // RGB_MATRIX_KEYREACTIVE_ENABLED
 
+#if defined(RGB_MATRIX_SMOOTH_BRIGHTESS)
+    sync_brightness();
+#endif
+
     // next task
     rgb_task_state = RENDERING;
 }
@@ -393,10 +397,6 @@ static void rgb_task_render(uint8_t effect) {
         }
             return;
     }
-
-#if defined(RGB_MATRIX_SMOOTH_BRIGHTESS)
-    sync_brightness();
-#endif
 
     rgb_effect_params.iter++;
 

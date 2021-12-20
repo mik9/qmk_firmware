@@ -181,7 +181,7 @@ led_flags_t rgb_matrix_get_flags(void);
 void        rgb_matrix_set_flags(led_flags_t flags);
 
 #ifdef RGB_MATRIX_SMOOTH_BRIGHTESS
-#   define RGB_MATRIX_VAL_PER_TICK 4
+#   define RGB_MATRIX_VAL_PER_TICK 24
 #endif
 
 #define RGB_MATRIX_DIM_BRIGHTNESS 50
