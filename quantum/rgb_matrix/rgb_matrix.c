@@ -332,7 +332,9 @@ static void sync_brightness(uint32_t elapsed) {
 #endif
 
 static void rgb_task_sync(void) {
-    eeconfig_flush_rgb_matrix(false);
+    if (!dimEnabled || rgb_matrix_config.hsv.v != targetVal) {
+        eeconfig_flush_rgb_matrix(false);
+    }
     // next task
     if (sync_timer_elapsed32(g_rgb_timer) >= RGB_MATRIX_LED_FLUSH_LIMIT) rgb_task_state = STARTING;
 }
@@ -621,8 +623,6 @@ void rgb_matrix_sethsv_eeprom_helper(uint16_t hue, uint8_t sat, uint8_t val, boo
     rgb_matrix_config.hsv.v = prevVal;
 #endif
 
-    eeconfig_flag_rgb_matrix(write_to_eeprom);
-
 #if defined(RGB_MATRIX_DIM)
     preDimVal = newVal;
 #endif
@@ -639,6 +639,7 @@ void rgb_matrix_sethsv_eeprom_helper(uint16_t hue, uint8_t sat, uint8_t val, boo
         rgb_matrix_config.hsv.v = newVal;
     }
 #endif
+    eeconfig_flag_rgb_matrix(write_to_eeprom);
     dprintf("rgb matrix set hsv [%s]: %u,%u,%u\n", (write_to_eeprom) ? "EEPROM" : "NOEEPROM", rgb_matrix_config.hsv.h, rgb_matrix_config.hsv.s, rgb_matrix_config.hsv.v);
 }
 void rgb_matrix_sethsv_noeeprom(uint16_t hue, uint8_t sat, uint8_t val) { rgb_matrix_sethsv_eeprom_helper(hue, sat, val, false); }
