@@ -32,10 +32,9 @@ void apply_layer(const single_rgb_config leds[]) {
 
 const single_rgb_config layer0[] = { NULL_LED };
 const single_rgb_config layer1[] = { {63, {0, 255, 0} }, NULL_LED };
-const single_rgb_config layer2[] = { {62, {0, 255, 0} }, NULL_LED };
-const single_rgb_config layer3[] = { {29, {0, 255, 0} }, NULL_LED };
-const single_rgb_config layer4[] = { {43, {0, 255, 0} }, {48, {0, 255, 0} }, NULL_LED };
-const single_rgb_config layer5[] = {
+const single_rgb_config layer2[] = { {29, {0, 255, 0} }, NULL_LED };
+const single_rgb_config layer3[] = { {43, {0, 255, 0} }, {48, {0, 255, 0} }, NULL_LED };
+const single_rgb_config layer4[] = {
     {57, {0, 255, 0} }, {6, {0, 255, 0} }, {7, {0, 0, 255} },
     {60, {0, 255, 0} }, {9, {255, 0, 0} }, {1, {0, 0, 255} },
     {12, {0, 0, 255}}, {48, {255, 0, 0}}, {34, {255, 0, 0}},
@@ -49,7 +48,6 @@ const single_rgb_config *led_layers[] = (const single_rgb_config*[]){
     layer2,
     layer3,
     layer4,
-    layer5,
     NULL // Null terminate the array
 };
 void rgb_matrix_indicators_user() {
