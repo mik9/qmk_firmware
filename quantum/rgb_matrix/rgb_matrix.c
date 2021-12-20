@@ -306,9 +306,11 @@ static void rgb_task_timers(void) {
 }
 
 #if defined(RGB_MATRIX_SMOOTH_BRIGHTESS)
-static void sync_brightness(void) {
+static void sync_brightness(uint32_t elapsed) {
     int16_t valDiff = (int16_t) rgb_matrix_config.hsv.v - (int16_t) targetVal;
     if (valDiff != 0) {
+        uint8_t max_val_change = elapsed * RGB_MATRIX_VAL_PER_MS;
+
         int8_t direction;
         if (valDiff < 0) {
             direction = 1;
@@ -316,12 +318,15 @@ static void sync_brightness(void) {
             direction = -1;
         }
 
-        uint8_t c = RGB_MATRIX_VAL_PER_TICK;
-        if (abs(valDiff) < RGB_MATRIX_VAL_PER_TICK) {
+        uint8_t c = max_val_change;
+        if (abs(valDiff) < max_val_change) {
             c = abs(valDiff);
         }
 
         rgb_matrix_config.hsv.v = rgb_matrix_config.hsv.v + c * direction;
+        if (rgb_matrix_config.hsv.v == targetVal) {
+            eeconfig_flag_rgb_matrix(true);
+        }
     }
 }
 #endif
@@ -336,15 +341,15 @@ static void rgb_task_start(void) {
     // reset iter
     rgb_effect_params.iter = 0;
 
+#if defined(RGB_MATRIX_SMOOTH_BRIGHTESS)
+    sync_brightness(sync_timer_elapsed32(g_rgb_timer));
+#endif
+
     // update double buffers
     g_rgb_timer = rgb_timer_buffer;
 #ifdef RGB_MATRIX_KEYREACTIVE_ENABLED
     g_last_hit_tracker = last_hit_buffer;
 #endif  // RGB_MATRIX_KEYREACTIVE_ENABLED
-
-#if defined(RGB_MATRIX_SMOOTH_BRIGHTESS)
-    sync_brightness();
-#endif
 
     // next task
     rgb_task_state = RENDERING;
