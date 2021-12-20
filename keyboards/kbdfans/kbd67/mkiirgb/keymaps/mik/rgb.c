@@ -32,7 +32,7 @@ void apply_layer(const single_rgb_config leds[]) {
 
 const single_rgb_config layer0[] = { NULL_LED };
 const single_rgb_config layer1[] = { {63, {0, 255, 0} }, NULL_LED };
-const single_rgb_config layer2[] = { {29, {0, 255, 0} }, NULL_LED };
+const single_rgb_config layer2[] = { {29, {0, 255, 0} }, {1, {0, 255, 0} }, {2, {0, 255, 0} }, NULL_LED };
 const single_rgb_config layer3[] = { {43, {0, 255, 0} }, {48, {0, 255, 0} }, NULL_LED };
 const single_rgb_config layer4[] = {
     {57, {0, 255, 0} }, {6, {0, 255, 0} }, {7, {0, 0, 255} },
