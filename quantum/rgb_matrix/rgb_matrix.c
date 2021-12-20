@@ -611,7 +611,7 @@ void rgb_matrix_sethsv_eeprom_helper(uint16_t hue, uint8_t sat, uint8_t val, boo
     rgb_matrix_config.hsv.s = sat;
     rgb_matrix_config.hsv.v = (val > RGB_MATRIX_MAXIMUM_BRIGHTNESS) ? RGB_MATRIX_MAXIMUM_BRIGHTNESS : val;
 
-    uint8_t v = rgb_matrix_config.hsv.v;
+    uint8_t newVal = rgb_matrix_config.hsv.v;
 #if defined(RGB_MATRIX_DIM) || defined(RGB_MATRIX_SMOOTH_BRIGHTESS)
     rgb_matrix_config.hsv.v = prevVal;
 #endif
@@ -619,19 +619,19 @@ void rgb_matrix_sethsv_eeprom_helper(uint16_t hue, uint8_t sat, uint8_t val, boo
     eeconfig_flag_rgb_matrix(write_to_eeprom);
 
 #if defined(RGB_MATRIX_DIM)
-    preDimVal = v;
+    preDimVal = newVal;
 #endif
 #if defined(RGB_MATRIX_SMOOTH_BRIGHTESS)
-    if (dimEnabled && v > RGB_MATRIX_DIM_BRIGHTNESS) {
+    if (dimEnabled && newVal > RGB_MATRIX_DIM_BRIGHTNESS) {
         targetVal = RGB_MATRIX_DIM_BRIGHTNESS;
     } else {
-        targetVal = v;
+        targetVal = newVal;
     }
 #else
-    if (dimEnabled && v > RGB_MATRIX_DIM_BRIGHTNESS) {
+    if (dimEnabled && newVal > RGB_MATRIX_DIM_BRIGHTNESS) {
         rgb_matrix_config.hsv.v = RGB_MATRIX_DIM_BRIGHTNESS;
     } else {
-        rgb_matrix_config.hsv.v = v;
+        rgb_matrix_config.hsv.v = newVal;
     }
 #endif
     dprintf("rgb matrix set hsv [%s]: %u,%u,%u\n", (write_to_eeprom) ? "EEPROM" : "NOEEPROM", rgb_matrix_config.hsv.h, rgb_matrix_config.hsv.s, rgb_matrix_config.hsv.v);
