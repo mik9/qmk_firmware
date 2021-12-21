@@ -14,6 +14,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include QMK_KEYBOARD_H
+#include "./rgb.h"
 
 #define RGB_DIM_AFTER_LAYER 1
 
@@ -31,14 +32,14 @@ void apply_layer(const single_rgb_config leds[]) {
 }
 
 const single_rgb_config layer0[] = { NULL_LED };
-const single_rgb_config layer1[] = { {63, {0, 255, 0} }, NULL_LED };
-const single_rgb_config layer2[] = { {29, {0, 255, 0} }, {1, {0, 255, 0} }, {2, {0, 255, 0} }, NULL_LED };
-const single_rgb_config layer3[] = { {43, {0, 255, 0} }, {48, {0, 255, 0} }, NULL_LED };
+const single_rgb_config layer1[] = { {LED_FN, {0, 255, 0} }, NULL_LED };
+const single_rgb_config layer2[] = { {LED_HOME, {0, 255, 0} }, {LED_1, {0, 255, 0} }, {LED_2, {0, 255, 0} }, NULL_LED };
+const single_rgb_config layer3[] = { {LED_PGUP, {0, 255, 0} }, {LED_V, {0, 255, 0} }, NULL_LED };
 const single_rgb_config layer4[] = {
-    {57, {0, 255, 0} }, {6, {0, 255, 0} }, {7, {0, 0, 255} },
-    {60, {0, 255, 0} }, {9, {255, 0, 0} }, {1, {0, 0, 255} },
-    {12, {0, 0, 255}}, {48, {255, 0, 0}}, {34, {255, 0, 0}},
-    {51, {255, 0, 0}}, {25, {255, 0, 0}}, {18, {0, 0, 255}},
+    {LED_PGDN, {0, 255, 0} }, {LED_6, {0, 255, 0} }, {LED_7, {0, 0, 255} },
+    {LED_LCMD, {0, 255, 0} }, {9, {255, 0, 0} }, {LED_1, {0, 0, 255} },
+    {LED_EQL, {0, 0, 255}}, {LED_V, {255, 0, 0}}, {LED_F, {255, 0, 0}},
+    {LED_M, {255, 0, 0}}, {LED_P, {255, 0, 0}}, {LED_E, {0, 0, 255}},
     NULL_LED
 };
 
